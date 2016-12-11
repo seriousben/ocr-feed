@@ -8,6 +8,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const { knex, } = require('./db');
+const { isPalindrome, TYPES: palindromImplTypes } = require('./palindrome');
 
 function deserializeFromApi(data) {
   // TODO: Make recursive
@@ -75,8 +76,8 @@ router.post('/', upload.single('image'), (req, res, next) => {
       const message = _.pick(req.body, [
         'content', 'imageUrl'
       ]);
-      if (fileInfo && fileInfo.text && !req.body.content) {
-        req.body.content = fileInfo.text;
+      if (fileInfo && fileInfo.text && !message.content) {
+        message.content = fileInfo.text;
       }
       message.created_at = new Date();
       message.updated_at = new Date();
@@ -100,8 +101,23 @@ router.get('/:id', (req, res, next) => {
 // Not Restful :) But fun
 router.get('/:id/isPalindrome', (req, res, next) => {
   // Check if a message is a palindrome
-  const algo = req.query.algo || _.sample(['native', 'js']);
+  const implType = req.query.algo || _.sample(palindromImplTypes);
 
+  const query = knex('t_messages')
+        .select('id', 'content', 'image_url', 'created_at', 'updated_at')
+        .where('id', req.params.id);
+
+  Promise.resolve(query).then((messages) => {
+    if (_.isEmpty(messages)) {
+      throw new errors.NotFound(); 
+    }
+    return isPalindrome(messages[0].content, implType);
+  }).then((isPalindrome) => {
+    res.json({
+      implType,
+      isPalindrome,
+    });
+  }).catch(next);
 });
 
 router.patch('/:id', (req, res, next) => {

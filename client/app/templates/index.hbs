@@ -1,0 +1,53 @@
+<h1>Feed</h1>
+
+{{outlet}}
+
+<div style="display:flex;flex-direction:row;">
+
+  <div style="border: 1px solid;padding: 10px;display:flex;flex-direction:row;flex-wrap:wrap;">
+    {{#each model as |message|}}
+    <div style="border: 1px solid;width: 100px; margin: 2px; padding: 5px;display:flex;flex-direction:column;justify-content: space-around;">
+      <div>
+        {{message.content}}
+      </div>
+      <div>
+        <button {{action 'select' message}}>Select</button>
+        <br>
+        <button {{action 'delete' message}}>Delete</button>
+      </div>
+    </div>
+    {{else}}
+      Empty Feed
+    {{/each}}
+  </div>
+
+  <div style="width: 250px; border: 1px solid;padding: 10px;display:flex;flex-direction:column;">
+
+    {{#if selectedMessage}}
+      <h4>Selected Message</h4>
+      {{#if selectedMessage.palindromeLoaded}}
+      <p>
+        {{#if selectedMessage.isPalindrome}}
+          Palindrome
+        {{else}}
+          Not a palindrome
+        {{/if}}
+      </p>
+      {{/if}}
+      {{textarea type='text' placeholder="Content" rows="10" value=selectedMessage.content}}
+      <button {{action 'select'}}>
+        Cancel
+      </button>
+      <button {{action 'update' selectedMessage}}>
+        Update Message
+      </button>
+    {{else}}
+      <h4>New Message</h4>
+      {{textarea type='text' placeholder="Content" rows="10" value=newMessage.content}}
+      <button {{action 'create' newMessage}}>
+        Create Message
+      </button>
+    {{/if}}
+
+  </div>
+</div>

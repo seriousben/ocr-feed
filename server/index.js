@@ -2,6 +2,7 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const bodyParser = require('body-parser')
 const errorHandler = require('errorhandler');
+const cors = require('cors');
 const express = require('express');
 const logger = require('winston');
 
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 app.use(bodyParser.json())
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('HI')
