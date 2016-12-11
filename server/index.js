@@ -8,7 +8,7 @@ const logger = require('winston');
 const { setupDatabase, } = require('./db');
 const messagesRouter = require('./messages');
 
-const app = express();
+const app = exports.app = express();
 app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({
   extended: true
