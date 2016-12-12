@@ -11,7 +11,7 @@
   "repository": "",
   "scripts": {
     "build": "ember build",
-    "start": "ember fastboot --serve-assets --port 4000",
+    "start": "ember fastboot --serve-assets --port 4000 --environment production",
     "test": "ember test"
   },
   "devDependencies": {
