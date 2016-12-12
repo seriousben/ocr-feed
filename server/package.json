@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "BLUEBIRD_DEBUG=true mocha"
   },
   "license": "MIT",
@@ -25,7 +26,7 @@
     "lodash": "^4.17.2",
     "morgan": "^1.7.0",
     "multer": "^1.2.0",
-    "palindrome": "git+ssh://git@github.com/seriousben/palindrome.git#add-tests",
+    "palindrome": "https://github.com/seriousben/palindrome.git#add-tests",
     "pg": "^6.1.0",
     "winston": "^2.3.0"
   }

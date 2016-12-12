@@ -1,5 +1,26 @@
 version: "2"
 services:
+  client:
+    build:
+      context: ./client
+    environment:
+      - API_HOST=http://localhost:3000
+      - FASTBOOT_API_HOST=http://server:3000
+    ports:
+      - "4000:4000"
+    links:
+      - server
+
+  server:
+    build:
+      context: ./server
+    environment:
+      - PG_CONNECTION_STRING=postgres://postgres@postgres:5432/postgres
+    ports:
+      - "3000:3000"
+    links:
+      - postgres
+
   postgres:
     image: postgres:9.5.4
     ports:

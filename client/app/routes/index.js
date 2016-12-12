@@ -6,8 +6,18 @@ import config from 'ocr-feed-client/config/environment';
 const Message = Ember.Object.extend({});
 
 export default Ember.Route.extend({
+  fastboot: Ember.inject.service(),
+  isFastBoot: Ember.computed.reads('fastboot.isFastBoot'),
+
+  apiHost: Ember.computed('isFastBoot', function() {
+    if (this.get('isFastBoot')) {
+      return config.APP.fastbootApiHost;
+    }
+    return config.APP.apiHost;
+  }),
+
   model() {
-    return fetch(`${config.APP.apiHost}/messages`)
+    return fetch(`${this.get('apiHost')}/messages`)
       .then((res) => res.json())
       .then((json) => {
         return json.data.map((d) => Message.create(d));
@@ -16,36 +26,36 @@ export default Ember.Route.extend({
 
   actions: {
     create(message) {
-      return fetch(`${config.APP.apiHost}/messages`, {
+      return fetch(`${this.get('apiHost')}/messages`, {
           method: 'POST',
           headers: {
             'content-type': 'application/json'
           },
           body: JSON.stringify(message.getProperties(['content'])),
         })
-        .then((res) => {
+        .then(() => {
           message.set('content', '');
           return this.refresh();
         });
     },
     update(message) {
-      return fetch(`${config.APP.apiHost}/messages/${message.id}`, {
+      return fetch(`${this.get('apiHost')}/messages/${message.id}`, {
           method: 'PATCH',
           headers: {
             'content-type': 'application/json'
           },
           body: JSON.stringify(message.getProperties(['content'])),
         })
-        .then((res) => {
+        .then(() => {
           this.set('controller.selectedMessage', null);
           return this.refresh();
         });
     },
     delete(message) {
-      return fetch(`${config.APP.apiHost}/messages/${message.id}`, {
+      return fetch(`${this.get('apiHost')}/messages/${message.id}`, {
           method: 'DELETE',
         })
-        .then((res) => {
+        .then(() => {
           this.set('controller.selectedMessage', null);
           return this.refresh();
         });
@@ -62,7 +72,7 @@ export default Ember.Route.extend({
         return;
       }
       message.set('palindromeLoaded', false);
-      fetch(`${config.APP.apiHost}/messages/${message.get('id')}/isPalindrome`, {
+      fetch(`${this.get('apiHost')}/messages/${message.get('id')}/isPalindrome`, {
           method: 'GET',
           headers: {
             'content-type': 'application/json'

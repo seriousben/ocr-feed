@@ -18,7 +18,8 @@ module.exports = function(environment) {
     },
 
     APP: {
-      apiHost: 'http://localhost:3000',
+      apiHost: process.env.API_HOST || 'http://localhost:3000',
+      fastbootApiHost: process.env.FASTBOOT_API_HOST || 'http://localhost:3000',
     }
   };
 
