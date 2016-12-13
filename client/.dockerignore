@@ -1,3 +1,5 @@
 dist
 tmp
 node_modules
+tests
+bower_components
