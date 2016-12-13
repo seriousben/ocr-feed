@@ -1,21 +1,24 @@
 apiVersion: v1
 kind: ReplicationController
 metadata:
+  name: client
   labels:
-    name: web
-  name: web-controller
+    name: client
 spec:
-  replicas: 2
-  selector:
-    name: web
+  replicas: 1
   template:
     metadata:
       labels:
-        name: web
+        name: client
     spec:
       containers:
-      - image: <YOUR-CONTAINER>
-        name: web
+      - name: client
+        image: seriousben/ocr-feed-client:latest
         ports:
-        - containerPort: 3000
-          name: http-server
+        - containerPort: 4000
+          name: client
+        env:
+        - name: API_HOST
+          value: http://server.ocr-feed.seriousben.com
+        - name: FASTBOOT_API_HOST
+          value: http://server

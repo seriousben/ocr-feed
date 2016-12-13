@@ -1,0 +1,19 @@
+.feed {
+  border: 1px solid;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.feed__message {
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  border: 1px solid;
+  width: 100px;
+  margin: 2px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
