@@ -2,10 +2,13 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const express = require('express');
 const errors = require('http-errors');
+const tesseract = require('tesseract_native');
 
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+const ocr = new tesseract.OcrEio();
 
 const { knex, } = require('./db');
 const { isPalindrome, TYPES: palindromImplTypes } = require('./palindrome');
@@ -64,20 +67,28 @@ router.get('/', (req, res, next) => {
 
   renderKnexQuery(query, req, res, next);
 });
-router.post('/', upload.single('image'), (req, res, next) => {
+
+function fileToText(file) {
+  return Promise.fromCallback((cb) => {
+    ocr.ocr(file.buffer, cb)
+  });
+}
+
+router.post('/', upload.single('file'), (req, res, next) => {
   // Create message
   Promise.resolve()
     .then(() => {
       if (!req.file) {
         return null;
       }
+      return fileToText(req.file);
     })
-    .then((fileInfo) => {
+    .then((text) => {
       const message = _.pick(req.body, [
         'content', 'imageUrl'
       ]);
-      if (fileInfo && fileInfo.text && !message.content) {
-        message.content = fileInfo.text;
+      if (text) {
+        message.content = _.trim(_.trim(text), '\n');
       }
       message.created_at = new Date();
       message.updated_at = new Date();
@@ -104,12 +115,12 @@ router.get('/:id/isPalindrome', (req, res, next) => {
   const implType = req.query.algo || _.sample(palindromImplTypes);
 
   const query = knex('t_messages')
-        .select('id', 'content', 'image_url', 'created_at', 'updated_at')
-        .where('id', req.params.id);
+    .select('id', 'content', 'image_url', 'created_at', 'updated_at')
+    .where('id', req.params.id);
 
   Promise.resolve(query).then((messages) => {
     if (_.isEmpty(messages)) {
-      throw new errors.NotFound(); 
+      throw new errors.NotFound();
     }
     return isPalindrome(messages[0].content, implType);
   }).then((isPalindrome) => {

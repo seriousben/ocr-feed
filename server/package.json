@@ -28,6 +28,7 @@
     "multer": "^1.2.0",
     "palindrome": "https://github.com/seriousben/palindrome.git#add-tests",
     "pg": "^6.1.0",
+    "tesseract_native": "^0.5.2",
     "winston": "^2.3.0"
   }
 }

@@ -13,7 +13,7 @@ describe('api', function() {
     return setupDatabase();
   });
 
-  describe('message api', function() {
+  describe('messages crud', function() {
     function expectMessageProperties(message) {
       expect(message).to.have.property('id');
       expect(message).to.have.property('content');
@@ -21,7 +21,7 @@ describe('api', function() {
       expect(message).to.have.property('updatedAt');
     }
 
-    it('crud', function() {
+    it('works', function() {
       return Promise.resolve().then(() => {
         return request(app)
           .get('/messages')
@@ -98,6 +98,23 @@ describe('api', function() {
           .get('/messages')
           .then((res) => {
             expect(res.body.data).to.have.lengthOf(0);
+          });
+      });
+    });
+
+    it('supports multipart too', function() {
+      return Promise.resolve().then(() => {
+        return request(app)
+          .post('/messages')
+          .field('content', 'content')
+          .attach('file', 'test/test.png')
+          .then((res) => {
+            expect(res.status).to.equal(200);
+            const message = res.body.data;
+            expectMessageProperties(message);
+            expect(message.content).to.equal(
+              'Red Roses run no risk, sir, on nurses order.'
+            );
           });
       });
     });
