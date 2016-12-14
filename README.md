@@ -6,7 +6,7 @@ OCR Message Feed
 
 ## Overview
 
-Running at: [Client](http://client.ocr-feed.seriousben.com/)
+Running at: [client.ocr-feed.seriousben.com](http://client.ocr-feed.seriousben.com/)
 
 This project is separated in 3 different parts:
 
