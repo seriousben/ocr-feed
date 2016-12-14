@@ -54,8 +54,8 @@ The running application is managed by a Kubernetes cluster on AWS.
 
 ### Deploy to the cluster
 
-  - kubectl create -f clusters/*-controller.yml
-  - kubectl create -f clusters/*-service.yml
+  - `kubectl create -f clusters/*-controller.yml`
+  - `kubectl create -f clusters/*-service.yml`
   - Profit!
 
 ### Setup CI + CD
@@ -72,13 +72,32 @@ More documentation in the [Client README](https://github.com/seriousben/ocr-feed
 
 (Documentation style from Basecamp API documentation https://github.com/basecamp/bc3-api)
 
+### Native dependencies
+
+ - libleptonica-dev
+ - libtesseract3
+ - libtesseract-dev
+ - tesseract-ocr-eng
+ 
+### installation
+ - Linux:
+   - apt-get install libleptonica-dev libtesseract3 libtesseract-dev tesseract-ocr-eng
+ - MacOS:
+   - brew install tesseract --all-languages
+   - brew install leptonica --with-libtiff
+
 ### Code
 
- - index.js: the main entrypoint
- - messages.js: the message API endpoints
- - db.js: postgres database connection and management
- - palindrome.js: palindrome checkers
- - test/*: Integration tests
+ - `index.js`: the main entrypoint
+ - `messages.js`: the message API endpoints
+ - `db.js`: postgres database connection and management
+ - `palindrome.js`: palindrome checkers
+ - `test/*`: Integration tests
+ 
+### Other contributions / Patches
+
+ - Palindome / https://github.com/seriousben/palindrome.git#add-tests
+ - Tesseract OCR native API / https://github.com/seriousben/node-tesseract-native.git#fix-install
 
 ### [API] Messages
 
