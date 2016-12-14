@@ -24,7 +24,8 @@ dependencies:
 test:
   override:
     - docker run -it --network=host seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM} bash -c "npm install --dev && npm test"
-    - cd client && npm install --dev && bower install && npm test && cd ..
+    # Not running within docker because of phantomjs extra dependency
+    - cd client && npm install bower -g && npm install --dev && bower install && npm test && cd ..
 
 deployment:
   production:
