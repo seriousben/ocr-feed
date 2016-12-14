@@ -47,6 +47,15 @@
       <button {{action 'create' newMessage}}>
         Create Message
       </button>
+
+      <h4>From Image</h4>
+      <form id="form__file">
+        <input type='file' name="file">
+
+      <button {{action 'createFile' }}>
+        Create Message
+      </button>
+      </form>
     {{/if}}
 
   </div>

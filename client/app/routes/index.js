@@ -38,6 +38,15 @@ export default Ember.Route.extend({
           return this.refresh();
         });
     },
+    createFile() {
+      return fetch(`${this.get('apiHost')}/messages`, {
+          method: 'POST',
+          body: new FormData(document.getElementById('form__file'))
+        })
+        .then(() => {
+          return this.refresh();
+        });
+    },
     update(message) {
       return fetch(`${this.get('apiHost')}/messages/${message.id}`, {
           method: 'PATCH',
@@ -85,7 +94,6 @@ export default Ember.Route.extend({
           message.set('isPalindrome', json.isPalindrome);
           message.set('palindromeLoaded', true);
         });
-
     },
   },
 });

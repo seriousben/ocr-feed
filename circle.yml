@@ -29,7 +29,7 @@ deployment:
     commands:
       - docker tag ocr-feed-server:latest seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
       - docker push seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
-      - ./kube/kubectl rolling-update server --image=seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
+      - ./.kube/kubectl rolling-update server --image=seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
       - docker tag ocr-feed-client:latest seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
       - docker push seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
-      - ./kube/kubectl rolling-update client --image=seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
+      - ./.kube/kubectl rolling-update client --image=seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
