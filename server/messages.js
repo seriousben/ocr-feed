@@ -31,6 +31,7 @@ function serializeToApi(data) {
   return _.mapKeys(data, (v, k) => _.camelCase(k));
 }
 
+// TODO: return status 201 on create
 function renderKnexSingleQuery(query, req, res, next) {
   Promise.resolve(query)
     .then((data) => {
