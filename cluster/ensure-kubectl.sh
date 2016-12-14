@@ -49,8 +49,9 @@ if [ ! -e ~/.kube ]; then
 fi
 
 if [ ! -e ~/.kube/kubectl ]; then
-    wget https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -O ~/.kube/kubectl
-    chmod +x ~/.kube/kubectl
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    chmod +x ./kubectl
+    mv ./kubectl ~/.kube/kubectl
 fi
 
 # ~/.kube/kubectl config use-context ${KUBECONTEXTQA}
