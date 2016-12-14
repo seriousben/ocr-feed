@@ -19,6 +19,7 @@ dependencies:
 
 test:
   override:
+    - echo "Tests are commented :("
     #- docker run -it --network=host seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM} bash -c "npm install --dev && npm test"
     # Not running within docker because of phantomjs extra dependency
     #- cd client && npm install bower -g && npm install --dev && bower install && npm test && cd ..
@@ -29,7 +30,7 @@ deployment:
     commands:
       - docker tag ocr-feed-server:latest seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
       - docker push seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
-      - ./.kube/kubectl rolling-update server --image=seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
+      - ~/.kube/kubectl rolling-update server --image=seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
       - docker tag ocr-feed-client:latest seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
       - docker push seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
-      - ./.kube/kubectl rolling-update client --image=seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
+      - ~/.kube/kubectl rolling-update client --image=seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
