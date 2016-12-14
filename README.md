@@ -8,7 +8,7 @@ OCR Message Feed
 
 Running at: [Client](http://client.ocr-feed.seriousben.com/)
 
-This project is separated in 3 differents parts:
+This project is separated in 3 different parts:
 
  - client: Ember.js web application + Dockerfile
  - server: Node API Server + Dockerfile
