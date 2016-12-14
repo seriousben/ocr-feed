@@ -4,19 +4,32 @@ machine:
   node:
     version: 6.9.2
 
+dependencies:
+  cache_directories:
+    - "~/.kube"
+  override:
+    - docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS}
+    # Install any missing required binaries/config
+    - chmod +x ./cluster/ensure-kubectl.sh && ./cluster/ensure-kubectl.sh
+    - aws s3 cp s3://ocr-feed-kubeconfig/config ~/.kube/config
+    # Build server
+    - docker build --rm=false -t ocr-feed-server server
+    - docker tag ocr-feed-server:latest seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
+    - docker push seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
+    # Build client
+    - docker build --rm=false -t ocr-feed-client client
+    - docker tag ocr-feed-client:latest seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
+    - docker push seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
+
 test:
-  overrides:
-    - cd client && npm install --dev && npm test && cd ..
-    - cd server && npm install --dev && npm test && cd ..
+  override:
+    - docker run -it --network=host seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM} bash -c "npm install --dev && npm test"
+    - cd client && npm install --dev && bower install && npm test && cd ..
 
 deployment:
-  hub:
-    branch: master
-    commands:
-      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - cd client && docker build --rm=false -t ocr-feed-client . && docker tag ocr-feed-client:latest "seriousben/ocr-feed-client:CIRCLE_BUILD_NUM" && docker push "seriousben/ocr-feed-client:$CIRCLE_BUILD_NUM" && cd ..
-      - cd server && docker build --rm=false -t ocr-feed-server . && docker tag ocr-feed-server:latest "seriousben/ocr-feed-server:CIRCLE_BUILD_NUM" && docker push "seriousben/ocr-feed-server:$CIRCLE_BUILD_NUM" && cd ..
   production:
     branch: master
     commands:
-      - ./deploy.sh $CIRCLE_BUILD_NUM
+     # Deploy
+      - kubectl rolling-update client --image=seriousben/ocr-feed-client:build-${CIRCLE_BUILD_NUM}
+      - kubectl rolling-update server --image=seriousben/ocr-feed-server:build-${CIRCLE_BUILD_NUM}
