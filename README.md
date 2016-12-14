@@ -16,7 +16,9 @@ This project is separated in 3 differents parts:
  
 This project also depends on a postgres database.
 
-Sequence diagram
+### Sequence diagram
+
+![Create Message](https://github.com/seriousben/ocr-feed/blob/master/doc/seq-create-message.png)
  
 ## Running
 
